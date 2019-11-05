@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { Provider } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ConfigureStore from "./store/ConfigureStore";
-import { addExpense } from "./actions/Expenses"
-import { setTextFilter, sortByDate } from "./actions/Filters"
-import getVisibleExpenses from "./selectors/Expenses"
+import { addExpense } from "./actions/Expenses";
+import { setTextFilter, sortByDate } from "./actions/Filters";
+import getVisibleExpenses from "./selectors/Expenses";
 import ExpenseDashboardPage from "./components/ExpenseDashboardPage";
 import AddExpensePage from "./components/AddExpensePage";
 import EditExpensePage from "./components/EditExpensePage";
@@ -14,12 +15,16 @@ import "./styles/App.scss";
 
 const store = ConfigureStore();
 
-store.dispatch(addExpense({description: "Water Bill"}))
+store.dispatch(addExpense({ description: "Water Bill", amount: 4500 }));
 store.dispatch(addExpense({ description: "Gas Bill" }));
-store.dispatch(setTextFilter('water'))
+store.dispatch(setTextFilter("water"));
+
+setTimeout(() => {
+  store.dispatch(setTextFilter("bill"));
+}, 3000);
 
 const state = store.getState();
-const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
+const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
 console.log(visibleExpenses);
 
 console.log(store.getState());
@@ -27,19 +32,21 @@ console.log(store.getState());
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Header />
-          <Switch>
-            <Route exact path="/" component={ExpenseDashboardPage} />
-            <Route path="/create" component={AddExpensePage} />
-            <Route path="/edit/:id" component={EditExpensePage} />
-            <Route path="/help" component={HelpPage} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </div>
-        {/* Switch goes through each Route checking if it's a match, if not it will render 404 page */}
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <div>
+            <Header />
+            <Switch>
+              <Route exact path="/" component={ExpenseDashboardPage} />
+              <Route path="/create" component={AddExpensePage} />
+              <Route path="/edit/:id" component={EditExpensePage} />
+              <Route path="/help" component={HelpPage} />
+              <Route component={NotFoundPage} />
+            </Switch>
+          </div>
+          {/* Switch goes through each Route checking if it's a match, if not it will render 404 page */}
+        </BrowserRouter>
+      </Provider>
     );
   }
 }
