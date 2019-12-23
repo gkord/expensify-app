@@ -3,7 +3,6 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ConfigureStore from "./store/ConfigureStore";
 import { addExpense } from "./actions/Expenses";
-import { setTextFilter, sortByDate } from "./actions/Filters";
 import getVisibleExpenses from "./selectors/Expenses";
 import ExpenseDashboardPage from "./components/ExpenseDashboardPage";
 import AddExpensePage from "./components/AddExpensePage";
